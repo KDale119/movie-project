@@ -1,13 +1,24 @@
 import {Dispatch, SetStateAction } from "react"
 import { actors, directors } from "../types";
 import Navigation from "./Navigation";
+import DeleteData from "./Delete/DeleteData";
+import Actors from "@/pages/Actors";
 
 
 interface DataProps{
     data: actors[] | directors[] | undefined,
+    deleteActor: ()=> void;
+
+
 
 }
-export default function DisplayData({data}:DataProps) {
+export default function DisplayData({data, deleteActor}:DataProps) {
+
+    // const deleteData = (d: actors | directors | undefined) => {
+    //     <DeleteData data={d}/>
+    //     // console.log(d)
+    //
+    // }
     return (
         <>
             <Navigation/>
@@ -25,16 +36,18 @@ export default function DisplayData({data}:DataProps) {
                     <th className="px-32 py-3"></th>
                     <th className="px-32 py-3"></th>
                 </tr>
-                <div>{data?.map(data =>
+                <div>{data?.map(d =>
                     <tbody className="bg-white divide-y divide-gray-200">
-                    <td key={data.id} className="px-36 py-8 whitespace-nowrap text-xl">{data.id}</td>
-                    <td key={data.id} className="px-36 py-8 whitespace-nowrap text-xl">{data.dateOfBirth}</td>
-                    <td key={data.id} className="px-36 py-8 whitespace-nowrap text-xl">{data.firstName}</td>
-                    <td key={data.id} className="px-36 py-8 whitespace-nowrap text-xl">{data.lastName}</td>
+                    <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.id}</td>
+                    <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.dateOfBirth}</td>
+                    <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.firstName}</td>
+                    <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.lastName}</td>
                     <td className="px-10">
                         <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">DELETE
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => deleteActor}>
+                            DELETE
                         </button>
+
                     </td>
                     <td>
                         <button

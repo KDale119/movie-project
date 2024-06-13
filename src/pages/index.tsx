@@ -1,9 +1,11 @@
 import Navigation from "@/components/Navigation";
 import Image from 'next/image';
 
+
+
 export default function Home() {
   return (
-    <>
+      <>
       <Navigation/>
         <div className="flex flex-row justify-center items-center py-60">
           <Image
@@ -40,6 +42,6 @@ export default function Home() {
               className="animate-bounce"
           />
         </div>
-    </>
+        </>
   );
 }
