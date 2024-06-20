@@ -5,13 +5,13 @@ import Navigation from "./Navigation";
 
 interface DataProps{
     data: movies[] | undefined,
-
+    deletePerson: (d: movies) => void;
 }
-export default function DisplayMovies({data}:DataProps) {
+export default function DisplayMovies({data, deletePerson}:DataProps) {
     return (
         <>
             <Navigation/>
-            <div className="relative mx-40">
+            <div className="relative mx-60">
                 <button className=" absolute top-0 right-0 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-20 rounded">ADD</button>
             </div>
             <table className="my-20">
@@ -23,14 +23,13 @@ export default function DisplayMovies({data}:DataProps) {
                     <th className="px-32 py-3"></th>
                     <th className="px-32 py-3"></th>
                 </tr>
-                <div>{data?.map(data =>
+                <div>{data?.map(d =>
                     <tbody className="bg-white divide-y divide-gray-200">
-                    <td key={data.id} className="px-36 py-8 whitespace-nowrap text-xl">{data.id}</td>
-                    <td key={data.id} className="px-36 py-8 whitespace-nowrap text-xl">{data.movieLength} hours</td>
-                    <td key={data.id} className="px-36 py-8 whitespace-nowrap text-xl">{data.movieTitle}</td>
-                    <td key={data.id} className="px-28 py-8 whitespace-nowrap text-xl">{data.releaseDate}</td>
-                    <td className="px-10"><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">DELETE</button></td>
-                    <td><button className="px-36 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">UPDATE</button></td>
+                    <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.id}</td>
+                    <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.movieLength} hours</td>
+                    <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.movieTitle}</td>
+                    <td key={d.id} className="px-28 py-8 whitespace-nowrap text-xl">{d.releaseDate}</td>
+                    <td className="px-10"><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => deletePerson(d)}>DELETE</button></td>
                     </tbody>)}
                 </div>
             </table>

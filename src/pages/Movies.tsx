@@ -4,26 +4,32 @@ import {movies } from "../types";
 import DisplayMovies from "../components/DisplayMovies";
 import { useQuery } from "@tanstack/react-query";
 
-interface DataProps{
-    data: movies[] | undefined,
-}
 
-export default function Movies({data}:DataProps) {
+
+export default function Movies() {
     const [movies, setMovies] = useState<movies[]>();
 
-    function getMovies(){
-        axios.get('http://3.149.27.3:8080/api/actors')
-            .then(response =>
-                setMovies(response.data))
-    }
-    useQuery({
-        queryKey:["directors"],
+    const {refetch} = useQuery({
+        queryKey:["movies"],
         queryFn: getMovies
     })
 
+    function getMovies(){
+        axios.get('http://3.149.27.3:8080/api/movies')
+            .then(response =>
+                setMovies(response.data))
+    }
+
+    const deleteMovies = (d: movies) => {
+        axios.delete(`http://3.149.27.3:8080/api/movies/${d?.id}`)
+            .then(resp => {
+                refetch();
+            })
+    }
+
     return (
         <>
-            <DisplayMovies data={movies}/>
+            <DisplayMovies data={movies} deletePerson={deleteMovies}/>
         </>
     )
 }

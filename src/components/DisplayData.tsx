@@ -1,30 +1,28 @@
+
+'use client'
 import {Dispatch, SetStateAction } from "react"
 import { actors, directors } from "../types";
 import Navigation from "./Navigation";
-import DeleteData from "./Delete/DeleteData";
-import Actors from "@/pages/Actors";
-
+import Update from "@/pages/Update";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface DataProps{
     data: actors[] | directors[] | undefined,
-    deleteActor: ()=> void;
-
-
-
+    deletePerson: (d: actors | directors) => void;
 }
-export default function DisplayData({data, deleteActor}:DataProps) {
+export default function DisplayData({data, deletePerson}:DataProps) {
 
-    // const deleteData = (d: actors | directors | undefined) => {
-    //     <DeleteData data={d}/>
-    //     // console.log(d)
-    //
-    // }
+    const router = useRouter();
+    const updatePage = [
+        {href: 'Update', name: "UPDATE"}]
+    
     return (
         <>
             <Navigation/>
             <div className="relative mx-60">
                 <button
-                    className=" absolute top-0 right-0 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-20 rounded">ADD
+                    className=" absolute top-0 right-0 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-20 rounded"><Link href="/AddActor">ADD</Link>
                 </button>
             </div>
             <table className="my-20">
@@ -44,15 +42,15 @@ export default function DisplayData({data, deleteActor}:DataProps) {
                     <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.lastName}</td>
                     <td className="px-10">
                         <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => deleteActor}>
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => deletePerson(d)}>
                             DELETE
                         </button>
-
                     </td>
                     <td>
                         <button
-                            className="px-36 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">UPDATE
-                        </button>
+                            className="px-36 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <Link href="/Update">UPDATE</Link> </button>
+                        
                     </td>
                     </tbody>)}
                 </div>

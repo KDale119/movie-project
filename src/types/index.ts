@@ -1,13 +1,13 @@
 export type actors = {
     id: number,
     dateOfBirth: string,
-    firstname: string,
+    firstName: string,
     lastName: string
 }
 export type directors = {
     id: number,
     dateOfBirth: string,
-    firstname: string,
+    firstName: string,
     lastName: string
 }
 export type movies = {
