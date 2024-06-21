@@ -16,7 +16,7 @@ export default function DisplayMovies({data, deletePerson}:DataProps) {
             </div>
             <table className="my-20">
                 <tr className="flex justify-center flex-row">
-                <th className="px-36 py-3 text-xl font-medium text-gray-500 uppercase">ID</th>
+                <th key="tableHead" className="px-36 py-3 text-xl font-medium text-gray-500 uppercase">ID</th>
                     <th className="px-36 py-3 text-xl font-medium text-gray-500 uppercase ">Length</th>
                     <th className="px-40 py-3 text-xl font-medium text-gray-500 uppercase ">Title</th>
                     <th className="px-64 py-3 text-xl font-medium text-gray-500 uppercase ">Release Date</th>
@@ -24,13 +24,13 @@ export default function DisplayMovies({data, deletePerson}:DataProps) {
                     <th className="px-32 py-3"></th>
                 </tr>
                 <div>{data?.map(d =>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <div key ="wrapper" className="bg-white divide-y divide-gray-200">
                     <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.id}</td>
                     <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.movieLength} hours</td>
                     <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.movieTitle}</td>
                     <td key={d.id} className="px-28 py-8 whitespace-nowrap text-xl">{d.releaseDate}</td>
-                    <td className="px-10"><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => deletePerson(d)}>DELETE</button></td>
-                    </tbody>)}
+                    <td key="button" className="px-10"><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => deletePerson(d)}>DELETE</button></td>
+                    </div>)}
                 </div>
             </table>
         </>

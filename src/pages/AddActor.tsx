@@ -1,16 +1,17 @@
 'use client'
 import * as yup from 'yup';
 import {actors} from "../types";
-import { useMutation, useQuery} from "react-query";
+import { useMutation, useQuery} from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Navigation from '../components/Navigation';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 
 export default function AddActor(){
-    const [actors, setActors] = useState<actors[]>();
+    const {push} = useRouter();
     const schema = yup.object().shape({
         id: yup.number().required('ID is required'),
         firstName: yup.string().required("First name is required"),
@@ -27,32 +28,20 @@ export default function AddActor(){
             dateOfBirth: ""
         }
     })
-
-    function getActors(){
-        axios.get('http://3.149.27.3:8080/api/actors')
-            .then(response =>
-                setActors(response.data))
-    }
-    const {refetch} = useQuery({
-        queryKey:["actors"],
-        queryFn: getActors
+    const mutation = useMutation({
+        mutationFn: (createActor: any) => {
+            return axios.post(`http://localhost:8080/api/actors/`, createActor)
+        }
     })
 
-    const addNewActor = (addActor: any) => {
-        console.log("addNewActor")
-        return axios.post(`http://3.149.27.3:8080/api/actors`, addActor)
-    }
-    const newActor = () => {
-        // console.log("newActor")
-        return useMutation(addNewActor)
-    }
-    const {mutate: addActor} = newActor()
+    const {mutate} = mutation
 
     const onSubmit = (formData: { id: number, firstName: string, lastName: string, dateOfBirth: string }) => {
         console.log(formData)
-        addActor(formData)
+        mutate(formData)
         console.log('after mutate')
-
+        const backToActors = () => push('/Actors')
+        backToActors();
     }
     return (
         <>
@@ -83,12 +72,12 @@ export default function AddActor(){
                     <label className="block text-gray-700 text-sm font-bold mb-2">Date of Birth:</label>
                     <input {...register('dateOfBirth')}
                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                           name="dob" type="date"/>
+                           name="dateOfBirth" type="text"/>
                 </div>
                 <div className="flex items-center justify-between">
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="submit" >Submit
+                        type="submit">Submit
                     </button>
                 </div>
             </form>
