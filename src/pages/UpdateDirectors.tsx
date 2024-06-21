@@ -10,27 +10,27 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 
-export default function AddActor(){
-    const {push} = useRouter();
-    const schema = yup.object().shape({
-        id: yup.number().required('ID is required'),
-        firstName: yup.string().required("First name is required"),
-        lastName: yup.string().required("Last name is required"),
-        dateOfBirth: yup.string().required("DOB is required")
-    })
+export default function UpdateDirectors(){
+    const router = useRouter();
+    const { id, firstName, lastName, dateOfBirth } = router.query as unknown as {
+        id: number,
+        firstName: string,
+        lastName: string,
+        dateOfBirth: string
+    }
 
-    const {register, handleSubmit} = useForm ({
-        resolver: yupResolver(schema),
+    const { register, handleSubmit} = useForm({
         defaultValues: {
-            id: 0,
-            firstName: "",
-            lastName: "",
-            dateOfBirth: ""
+            id: id,
+            firstName: firstName,
+            lastName: lastName,
+            dateOfBirth: dateOfBirth
         }
     })
+
     const mutation = useMutation({
-        mutationFn: (createActor: any) => {
-            return axios.put(`http://localhost:8080/api/actors/`, createActor)
+        mutationFn: (formData: any) => {
+            return axios.put(`http://localhost:8080/api/directors/${id}`, formData)
         }
     })
 
@@ -38,8 +38,8 @@ export default function AddActor(){
 
     const onSubmit = (formData: { id: number, firstName: string, lastName: string, dateOfBirth: string }) => {
         mutate(formData)
-        const backToActors = () => push('/Actors')
-        backToActors();
+        const backToDirectors = () => router.push('/Directors')
+        backToDirectors();
     }
     return (
         <>
@@ -48,34 +48,33 @@ export default function AddActor(){
                   className="max-w-sm mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">ID:</label>
-                    <input {...register('id')}
-                           className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    <input defaultValue={id} {...register('id')} className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                            name="id"
                            type="text"/>
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">First Name:</label>
-                    <input {...register('firstName')}
+                    <input defaultValue={firstName} {...register('firstName')}
                            className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                            name="firstName"
                            type="text"/>
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Last Name:</label>
-                    <input {...register('lastName')}
+                    <input defaultValue={lastName} {...register('lastName')}
                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                            name="lastName" type="text"/>
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Date of Birth:</label>
-                    <input {...register('dateOfBirth')}
+                    <input defaultValue={dateOfBirth} {...register('dateOfBirth')}
                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                            name="dateOfBirth" type="text"/>
                 </div>
                 <div className="flex items-center justify-between">
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="submit">Submit
+                        type="submit">Update
                     </button>
                 </div>
             </form>

@@ -1,17 +1,15 @@
 'use client'
 import * as yup from 'yup';
-import {actors} from "../types";
-import { useMutation, useQuery} from "react-query";
+import { useMutation} from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Navigation from '../components/Navigation';
-import { useState } from 'react';
+
 import { useRouter } from 'next/router';
 
 
-export default function Update(){
-    const [actors, setActors] = useState<actors[]>();
+export default function AddDirectors(){
     const {push} = useRouter();
     const schema = yup.object().shape({
         id: yup.number().required('ID is required'),
@@ -29,32 +27,18 @@ export default function Update(){
             dateOfBirth: ""
         }
     })
-
-    function getActors(){
-        axios.get('http://3.149.27.3:8080/api/actors')
-            .then(response =>
-                setActors(response.data))
-    }
-    const {refetch} = useQuery({
-        queryKey:["actors"],
-        queryFn: getActors
+    const mutation = useMutation({
+        mutationFn: (createDirector: any) => {
+            return axios.post(`http://localhost:8080/api/directors/`, createDirector)
+        }
     })
 
-    const addNewActor = (addActor: any) => {
-        console.log("addNewActor")
-        return axios.put(`http://3.149.27.3:8080/api/actors/`, addActor)
-    }
-    const useNewActor = () => {
-        // console.log("newActor")
-        return useMutation(addNewActor)
-    }
-    const {mutate: addActor} = useNewActor()
+    const {mutate} = mutation
 
     const onSubmit = (formData: { id: number, firstName: string, lastName: string, dateOfBirth: string }) => {
-        console.log(formData)
-        addActor(formData)
-        console.log('after mutate')
-
+        mutate(formData)
+        const backToDirectors = () => push('/Directors')
+        backToDirectors();
     }
     return (
         <>
@@ -85,12 +69,12 @@ export default function Update(){
                     <label className="block text-gray-700 text-sm font-bold mb-2">Date of Birth:</label>
                     <input {...register('dateOfBirth')}
                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                           name="dateOfBirth" type="test"/>
+                           name="dateOfBirth" type="text"/>
                 </div>
                 <div className="flex items-center justify-between">
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="submit" onClick={() => push('/Actors')}>Submit
+                        type="submit">Submit
                     </button>
                 </div>
             </form>
