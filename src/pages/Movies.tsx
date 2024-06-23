@@ -15,13 +15,13 @@ export default function Movies() {
     })
 
     function getMovies(){
-        axios.get('http://3.149.27.3:8080/api/movies')
+        axios.get('http://localhost:8080/api/movies')
             .then(response =>
                 setMovies(response.data))
     }
 
     const deleteMovies = (d: movies) => {
-        axios.delete(`http://3.149.27.3:8080/api/movies/${d?.id}`)
+        axios.delete(`http://localhost:8080/api/movies/${d?.id}`)
             .then(resp => {
                 refetch();
             })
@@ -29,7 +29,7 @@ export default function Movies() {
 
     return (
         <>
-            <DisplayMovies data={movies} deletePerson={deleteMovies}/>
+            <DisplayMovies data={movies} deleteMovie={deleteMovies}/>
         </>
     )
 }

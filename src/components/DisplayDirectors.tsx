@@ -13,6 +13,7 @@ interface DataProps{
 
 }
 export default function DisplayDirectors({data, deletePerson}:DataProps) {
+    const router = useRouter();
     const passingData = (d: actors) => {
         router.push({
             pathname: "/UpdateDirectors",
@@ -21,10 +22,9 @@ export default function DisplayDirectors({data, deletePerson}:DataProps) {
                 firstName: d.firstName,
                 lastName: d.lastName,
                 dateOfBirth: d.dateOfBirth
-            },
-        });
-    };
-    const router = useRouter();
+            }
+        })
+    }
     return (
         <>
             <Navigation/>

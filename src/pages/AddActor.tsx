@@ -1,12 +1,10 @@
 'use client'
-import * as yup from 'yup';
-import {actors} from "../types";
-import { useMutation, useQuery} from "@tanstack/react-query";
+import * as yup from 'yup';import { useMutation} from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Navigation from '../components/Navigation';
-import { useState } from 'react';
+
 import { useRouter } from 'next/router';
 
 
@@ -30,7 +28,7 @@ export default function AddActor(){
     })
     const mutation = useMutation({
         mutationFn: (createActor: any) => {
-            return axios.put(`http://localhost:8080/api/actors/`, createActor)
+            return axios.post(`http://localhost:8080/api/actors/`, createActor)
         }
     })
 
