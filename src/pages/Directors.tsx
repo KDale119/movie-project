@@ -5,17 +5,14 @@ import {useQuery} from "@tanstack/react-query";
 import DisplayDirectors from "@/components/DisplayDirectors";
 
 export default function Directors() {
-    const [directors, setDirectors] = useState<directors[]>();
-
-    const {refetch} = useQuery({
+    const {refetch, data} = useQuery({
         queryKey:["directors"],
         queryFn: getDirectors
     })
 
-    function getDirectors() {
-        axios.get('http://localhost:8080/api/directors')
-            .then(response =>
-                setDirectors(response.data))
+    async function getDirectors() {
+        const response = await axios.get('http://localhost:8080/api/directors');
+        return response.data;   
     }
     const deleteDirectors = (d: actors | directors) => {
         axios.delete(`http://localhost:8080/api/directors/${d?.id}`)
@@ -26,7 +23,7 @@ export default function Directors() {
 
     return (
         <>
-            <DisplayDirectors data={directors} deletePerson={deleteDirectors}/>
+            <DisplayDirectors data={data} deletePerson={deleteDirectors}/>
         </>
     )
 }

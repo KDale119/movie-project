@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction } from "react"
+import {Dispatch, SetStateAction, useEffect } from "react"
 import {movies } from "../types";
 import Navigation from "./Navigation";
 import { useRouter } from "next/router";
@@ -6,22 +6,20 @@ import Link from "next/link";
 
 
 interface DataProps{
-    data: movies[] | undefined,
+    dataForMovies: movies[] | undefined,
     deleteMovie: (d: movies) => void;
 }
-export default function DisplayMovies({data, deleteMovie}:DataProps) {
+export default function DisplayMovies({dataForMovies, deleteMovie}:DataProps) {
     const router = useRouter();
     const passingData = (d: movies) => {
         router.push({
-            pathname: "/UpdateDirectors",
+            pathname: "/MovieInfo",
             query: {
-                id: d.id,
-                firstName: d.movieLength,
-                lastName: d.movieTitle,
-                dateOfBirth: d.releaseDate
+                id: d.id
             }
         })
     }
+    
     return (
         <>
             <Navigation/>
@@ -44,24 +42,17 @@ export default function DisplayMovies({data, deleteMovie}:DataProps) {
                 </tr>
                 </thead>
                 <tbody>
-                <tr key="mapper row">{data?.map(d =>
-                    <tr key="table wrapper" className="bg-white divide-y divide-gray-200">
+                <tr key="mapperRow">{dataForMovies?.map(d =>
+                    <tr key={"tableWrapper" + d.id} className="bg-white divide-y divide-gray-200">
                         <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.id}</td>
                         <td key={d.movieLength} className="px-36 py-8 whitespace-nowrap text-xl">{d.movieLength} hours</td>
-                        <td key={d.movieTitle} className="px-36 py-8 whitespace-nowrap text-xl">{d.movieTitle}</td>
+                        <td key={d.movieTitle} className="px-36 py-15 whitespace-nowrap text-xl" onClick={() => passingData(d)}>{d.movieTitle}</td>
                         <td key={d.releaseDate} className="px-36 py-8 whitespace-nowrap text-xl">{d.releaseDate}</td>
                         <td className="px-10" key="deleteButton">
                             <button key="button"
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                     onClick={() => deleteMovie(d)}>
                                 DELETE
-                            </button>
-                        </td>
-                        <td key="wrapper">
-                            <button key="updateButton"
-                                    className="px-36 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                    onClick={() => passingData(d)}>
-                                UPDATE
                             </button>
                         </td>
                     </tr>)}

@@ -7,17 +7,16 @@ import { useQuery } from "@tanstack/react-query";
 
 
 export default function Movies() {
-    const [movies, setMovies] = useState<movies[]>();
-
-    const {refetch} = useQuery({
+    const {refetch, data} = useQuery({
         queryKey:["movies"],
-        queryFn: getMovies
+
+        queryFn: getMovies,
+        gcTime: 0
     })
 
-    function getMovies(){
-        axios.get('http://localhost:8080/api/movies')
-            .then(response =>
-                setMovies(response.data))
+    async function getMovies() {
+        const response = await axios.get('http://localhost:8080/api/movies');
+        return response.data;
     }
 
     const deleteMovies = (d: movies) => {
@@ -26,10 +25,9 @@ export default function Movies() {
                 refetch();
             })
     }
-
     return (
         <>
-            <DisplayMovies data={movies} deleteMovie={deleteMovies}/>
+            <DisplayMovies dataForMovies={data} deleteMovie={deleteMovies}/>
         </>
     )
 }

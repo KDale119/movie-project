@@ -7,23 +7,21 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import DisplayActors from "@/components/DisplayActors";
 
 interface DataProps{
-    data: actors[] | undefined
+    actorsData: actors[] | undefined
 
 }
 
-export default function Actors({data}: DataProps) {
-    const [actors, setActors] = useState<actors[]>();
+export default function Actors({actorsData}: DataProps) {
 
-    const {refetch} = useQuery({
+    const {refetch, data} = useQuery({
         queryKey:["actors"],
         queryFn: getActors
     })
 
-    function getActors(){
-        axios.get('http://localhost:8080/api/actors')
-            .then(response =>
-                setActors(response.data))
-            }
+    async function getActors() {
+        const response = await axios.get('http://localhost:8080/api/actors');
+        return response.data;
+    }
 
     const deleteActors = (d: actors | directors) => {
         axios.delete(`http://localhost:8080/api/actors/${d?.id}`)
@@ -33,7 +31,7 @@ export default function Actors({data}: DataProps) {
     }
     return (
         <>
-            <DisplayActors data={actors} deletePerson={deleteActors}/>
+            <DisplayActors data={data} deletePerson={deleteActors}/>
         </>
     )
 }

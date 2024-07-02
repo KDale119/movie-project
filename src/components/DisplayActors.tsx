@@ -50,7 +50,7 @@ export default function DisplayActors({data, deletePerson}:DataProps) {
                 </thead>
                 <tbody>
                 <tr key="mapper row">{data?.map(d =>
-                    <tr  key="table wrapper" className="bg-white divide-y divide-gray-200">
+                    <tr key={"tableWrapper" + d.id} className="bg-white divide-y divide-gray-200">
                     <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.id}</td>
                     <td key={d.dateOfBirth} className="px-36 py-8 whitespace-nowrap text-xl">{d.dateOfBirth}</td>
                     <td key={d.firstName} className="px-36 py-8 whitespace-nowrap text-xl">{d.firstName}</td>
@@ -61,7 +61,7 @@ export default function DisplayActors({data, deletePerson}:DataProps) {
                             DELETE
                         </button>
                     </td>
-                    <td key="wrapper">
+                    <td key="table data">
                             <button key="updateButton" className="px-36 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => passingData(d)}>
                                 UPDATE
                             </button>

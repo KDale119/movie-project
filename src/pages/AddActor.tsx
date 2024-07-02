@@ -17,7 +17,7 @@ export default function AddActor(){
         dateOfBirth: yup.string().required("DOB is required")
     })
 
-    const {register, handleSubmit} = useForm ({
+    const {register, handleSubmit, formState: {errors}} = useForm ({
         resolver: yupResolver(schema),
         defaultValues: {
             id: 0,

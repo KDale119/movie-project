@@ -48,7 +48,7 @@ export default function DisplayDirectors({data, deletePerson}:DataProps) {
                 </thead>
                 <tbody>
                 <tr key="mapper row">{data?.map(d =>
-                    <tr  key="table wrapper" className="bg-white divide-y divide-gray-200">
+                    <tr  key={"tableWrapper" + d.id} className="bg-white divide-y divide-gray-200">
                     <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.id}</td>
                     <td key={d.dateOfBirth} className="px-36 py-8 whitespace-nowrap text-xl">{d.dateOfBirth}</td>
                     <td key={d.firstName} className="px-36 py-8 whitespace-nowrap text-xl">{d.firstName}</td>

@@ -1,12 +1,9 @@
 'use client'
-import * as yup from 'yup';
-import {actors} from "../types";
-import { useMutation, useQuery} from "@tanstack/react-query";
+
+import { useMutation} from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import Navigation from '../components/Navigation';
-import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 
