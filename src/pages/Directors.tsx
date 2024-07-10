@@ -11,11 +11,11 @@ export default function Directors() {
     })
 
     async function getDirectors() {
-        const response = await axios.get('http://localhost:8080/api/directors');
+        const response = await axios.get('http://3.149.27.3:8080/api/directors');
         return response.data;   
     }
     const deleteDirectors = (d: actors | directors) => {
-        axios.delete(`http://localhost:8080/api/directors/${d?.id}`)
+        axios.delete(`http://3.149.27.3:8080/api/directors/${d?.id}`)
             .then(resp => {
                 refetch();
             })

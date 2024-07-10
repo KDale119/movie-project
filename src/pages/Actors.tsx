@@ -19,12 +19,12 @@ export default function Actors({actorsData}: DataProps) {
     })
 
     async function getActors() {
-        const response = await axios.get('http://localhost:8080/api/actors');
+        const response = await axios.get('http://3.149.27.3:8080/api/actors');
         return response.data;
     }
 
     const deleteActors = (d: actors | directors) => {
-        axios.delete(`http://localhost:8080/api/actors/${d?.id}`)
+        axios.delete(`http://3.149.27.3:8080/api/actors/${d?.id}`)
             .then(resp => {
                 refetch();
             })

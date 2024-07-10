@@ -1,20 +1,25 @@
 'use client'
 import * as yup from 'yup';
-import {actors, directors} from "../types";
+import {actors, directors, movies} from "../types";
 import { useMutation} from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Navigation from '../components/Navigation';
 import { useRouter } from 'next/router';
-import {useEffect, useState } from 'react';
+import {AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal,
+    useEffect,
+    useState
+} from 'react';
 import Link from 'next/link';
 
 export default function AddMovie() {
     const [directorsState, setDirectors] = useState<directors[]>();
     const [actorsState, setActors] = useState<actors[]>();
-
-
+    const [genreState, setGenre] = useState<any>();
+    const [ratingState, setRating] = useState<any>();
+    const [isSubmitting, setSubmit]= useState<boolean>(false);
+    
     const {push} = useRouter();
     const schema = yup.object().shape({
         id: yup.number(),
@@ -26,7 +31,6 @@ export default function AddMovie() {
         genre: yup.string(),
         director: yup.string(),
         actor: yup.array().of(yup.string()).min(1, 'Select at least one actor'),
-        //how to make an array cause there might be more than one actor in movie- tell it its an array of actors
         overview: yup.string()
 
     })
@@ -47,14 +51,22 @@ export default function AddMovie() {
         }
     })
     const mutation = useMutation({
-        mutationFn: async (createMovie:any) => {
-            const response = await axios.post('http://localhost:8080/api/movies/', createMovie);
-                return response.data
+        mutationFn: async (createMovie: any) => {
+            const response = await axios.post('http://3.149.27.3:8080/api/movies/', createMovie);
+            return response.data
         }
     })
 
-    const {mutate} = mutation
+    const {mutate, isPending} = mutation
 
+    useEffect(() => {
+        if(!isPending && isSubmitting) {
+            const backToMovies = () => push('/Movies');
+            setSubmit(false)
+            backToMovies();
+        }
+    }, [isPending, isSubmitting]);
+    
     const onSubmit = (formData: {
         id?: number,
         movieLength: number,
@@ -68,63 +80,73 @@ export default function AddMovie() {
         overview?: string
     }) => {
 
-    const director = directorsState?.find(d => `${d.firstName} ${d.lastName}` === formData.director);
-    const directorObject = {
-        id: director?.id,
-        dateOfBirth: director?.dateOfBirth,
-        firstName: director?.firstName,
-        lastName: director?.lastName
-    }
-
-    const genreObject = {
-        id: 0,
-        genre: formData.genre
-    }
-
-    const ratingObject = {
-        id: 0,
-        description: " ",
-        rating: formData.rating
-    }
-
-    const actorIds = formData.actor?.map(actorName => {
-        const actor = actorsState?.find(a => `${a.firstName} ${a.lastName}` === actorName);
-        return {
-            id: actor?.id,
-            dateOfBirth: actor?.dateOfBirth,
-            firstName: actor?.firstName,
-            lastName: actor?.lastName
+        const director = directorsState?.find(d => `${d.firstName} ${d.lastName}` === formData.director);
+        const directorObject = {
+            id: director?.id,
+            dateOfBirth: director?.dateOfBirth,
+            firstName: director?.firstName,
+            lastName: director?.lastName
         }
-    })
 
-    const createMovie = {
-        id: formData.id,
-        movieLength: formData.movieLength,
-        movieTitle: formData.movieTitle,
-        releaseDate: formData.releaseDate,
-        trailerUrl: formData.trailerUrl,
-        overview: formData.overview,
-        director: directorObject,
-        genre: genreObject,
-        rating: ratingObject,
-        actors: actorIds
-    }
-    console.log(createMovie)
-    mutate(createMovie);
-    console.log(createMovie)
-    const backToMovies = () => push('/Movies');
-    backToMovies();
+        const genre = genreState?.find((g: any) => `${g.genre}` === formData.genre);
+        const genreObject = {
+            id: genre?.id,
+            genre: formData.genre
 
+        }
+        
+        const rating = ratingState?.find((r: any) => `${r.rating}` === formData.rating);
+        const ratingObject = {
+            id: rating?.id,
+            genre: formData.rating
+
+        }
+
+        const actorIds = formData.actor?.map(actorName => {
+            const actor = actorsState?.find(a => `${a.firstName} ${a.lastName}` === actorName);
+            return {
+                id: actor?.id,
+                dateOfBirth: actor?.dateOfBirth,
+                firstName: actor?.firstName,
+                lastName: actor?.lastName
+            }
+        })
+        const createMovie = {
+            id: formData.id,
+            movieLength: formData.movieLength,
+            movieTitle: formData.movieTitle,
+            releaseDate: formData.releaseDate,
+            trailerUrl: formData.trailerUrl,
+            overview: formData.overview,
+            director: directorObject,
+            genre: genreObject,
+            rating: ratingObject,
+            actors: actorIds
+        }
+        setSubmit(true)
+        mutate(createMovie);
+        
     }
     useEffect(() => {
-        axios.get('http://localhost:8080/api/directors')
-            .then(response =>{
-                setDirectors(response.data)})
-        axios.get('http://localhost:8080/api/actors')
-            .then(response =>{
-                setActors(response.data)})
+        axios.get('http://3.149.27.3:8080/api/directors')
+            .then(response => {
+                setDirectors(response.data)
+            })
+        axios.get('http://3.149.27.3:8080/api/actors')
+            .then(response => {
+                setActors(response.data)
+            })
+
+        axios.get('http://3.149.27.3:8080/api/genres')
+            .then(response => {
+                setGenre(response.data)
+            })
+        axios.get('http://3.149.27.3:8080/api/ratings')
+            .then(response => {
+                setRating(response.data)
+            })
     }, []);
-    
+
     return (
         <>
             <Navigation/>
@@ -142,7 +164,7 @@ export default function AddMovie() {
                     <input {...register('movieTitle')}
                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                            name="movieTitle" type="text"
-                           />
+                    />
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Release Date:</label>
@@ -153,38 +175,38 @@ export default function AddMovie() {
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Overview:</label>
                     <textarea {...register('overview')}
-                           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                           name="overview" />
+                              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                              name="overview"/>
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Select a rating:</label>
-                    <select {...register('rating')} name="rating"
+                    <select {...register('rating')}
                             className="block w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="G">G</option>
-                        <option value="PG">PG</option>
-                        <option value="PG-13">PG-13</option>
-                        <option value="R">R</option>
+                        {ratingState?.map((r: { rating: boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | Key | null | undefined; }) => (
+                            <option key="rating"
+                                    value={`${r.rating}`}>{r.rating}</option>
+                        ))}
                     </select>
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Select a genre:</label>
-                    <select {...register('genre')} name="genre"
+                    <select {...register('genre')}
                             className="block w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="Action/Adventure">Action/Adventure</option>
-                        <option value="Thriller">Thriller</option>
-                        <option value="Horror">Horror</option>
-                        <option value="Drama">Drama</option>
-                        <option value="Comedy">Comedy</option>
-                        <option value="Western">Western</option>
-                        <option value="Romance">Romance</option>
-                        <option value="Documentary">Documentary</option>
-                        <option value="Crime">Crime</option>
+                        {genreState?.map((genre: {
+                            firstName: boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | Key | null | undefined;
+                            genre: any;
+                            lastName: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined;
+                        }) => (
+                            <option key={genre.genre}
+                                    value={`${genre.genre}`}>{genre.genre}</option>
+
+                        ))}
                     </select>
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Director:</label>
                     <select  {...register('director')}
-                            className="block w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                             className="block w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         {directorsState?.map(d => (
                             <option key={d.firstName} value={`${d.firstName} ${d.lastName}`}>{d.firstName} {d.lastName}</option>
                         ))}
@@ -204,7 +226,6 @@ export default function AddMovie() {
                         </select >
                     </div>
                 </div>
-                {errors ? <p>{errors?.actor?.message}</p> : <p>rgdregredg</p>}
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Trailer URL:</label>
                     <input {...register('trailerUrl')}

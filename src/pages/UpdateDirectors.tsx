@@ -5,9 +5,12 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import Navigation from '../components/Navigation';
 import { useRouter } from 'next/router';
+import {useEffect, useState } from "react";
 
 
 export default function UpdateDirectors(){
+    const [isSubmitting, setSubmit]= useState<boolean>(false);
+
     const router = useRouter();
     const { id, firstName, lastName, dateOfBirth } = router.query as unknown as {
         id: number,
@@ -27,28 +30,29 @@ export default function UpdateDirectors(){
 
     const mutation = useMutation({
         mutationFn: (formData: any) => {
-            return axios.put(`http://localhost:8080/api/directors/${id}`, formData)
+            return axios.put(`http://3.149.27.3:8080/api/directors/${id}`, formData)
         }
     })
 
-    const {mutate} = mutation
+    const {mutate, isPending} = mutation
+
+    useEffect(() => {
+        if(!isPending && isSubmitting) {
+            const backToDirectors = () => router.push('/Directors')
+            setSubmit(false)
+            backToDirectors();
+        }
+    }, [isPending, isSubmitting]);
 
     const onSubmit = (formData: { id: number, firstName: string, lastName: string, dateOfBirth: string }) => {
+        setSubmit(true)
         mutate(formData)
-        const backToDirectors = () => router.push('/Directors')
-        backToDirectors();
     }
     return (
         <>
             <Navigation/>
             <form onSubmit={handleSubmit(onSubmit)}
                   className="max-w-sm mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">ID:</label>
-                    <input defaultValue={id} {...register('id')} className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                           name="id"
-                           type="text"/>
-                </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">First Name:</label>
                     <input defaultValue={firstName} {...register('firstName')}

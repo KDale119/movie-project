@@ -7,9 +7,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Navigation from '../components/Navigation';
 
 import { useRouter } from 'next/router';
+import {useEffect, useState } from 'react';
 
 
 export default function AddDirectors(){
+    const [isSubmitting, setSubmit]= useState<boolean>(false);
+
     const {push} = useRouter();
     const schema = yup.object().shape({
         id: yup.number().required('ID is required'),
@@ -29,16 +32,24 @@ export default function AddDirectors(){
     })
     const mutation = useMutation({
         mutationFn: (createDirector: any) => {
-            return axios.post(`http://localhost:8080/api/directors/`, createDirector)
+            return axios.post(`http://3.149.27.3:8080/api/directors/`, createDirector)
         }
     })
 
-    const {mutate} = mutation
+    const {mutate, isPending} = mutation
 
+    useEffect(() => {
+        if(!isPending && isSubmitting) {
+            const backToDirectors = () => push('/Directors')
+            setSubmit(false)
+            backToDirectors();
+        }
+    }, [isPending, isSubmitting]);
+    
     const onSubmit = (formData: { id: number, firstName: string, lastName: string, dateOfBirth: string }) => {
+        setSubmit(true)
         mutate(formData)
-        const backToDirectors = () => push('/Directors')
-        backToDirectors();
+        
     }
     return (
         <>

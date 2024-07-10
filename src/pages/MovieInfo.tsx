@@ -12,7 +12,7 @@ export default function DisplayMovies() {
     const router = useRouter();
 
     const getMovieById= async () => {
-        const resp: AxiosResponse <movies> = await axios.get(`http://localhost:8080/api/movies/${id}`);
+        const resp: AxiosResponse <movies> = await axios.get(`http://3.149.27.3:8080/api/movies/${id}`);
         console.log(resp.data)
         return resp.data;
 

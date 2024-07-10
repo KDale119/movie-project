@@ -7,7 +7,7 @@ import Image from 'next/image';
 export default function Home() {
   return (
       <>
-      <Navigation/>
+      <Navigation data-testid="navigation"/>
         <div className="flex flex-row justify-center items-center py-60">
           <Image
               src="/images/popcorn.png"
@@ -21,6 +21,7 @@ export default function Home() {
               alt="Soda"
               width={225}
               height={150}
+              className="animate-bounce"
           />
           <Image
               src="/images/cut.png"
@@ -34,6 +35,7 @@ export default function Home() {
               alt="Candy"
               width={225}
               height={150}
+              className="animate-bounce"
           />
           <Image
               src="/images/movieReel.png"

@@ -9,18 +9,17 @@ import { useQuery } from "@tanstack/react-query";
 export default function Movies() {
     const {refetch, data} = useQuery({
         queryKey:["movies"],
-
         queryFn: getMovies,
         gcTime: 0
     })
 
     async function getMovies() {
-        const response = await axios.get('http://localhost:8080/api/movies');
+        const response = await axios.get('http://3.149.27.3:8080/api/movies');
         return response.data;
     }
 
     const deleteMovies = (d: movies) => {
-        axios.delete(`http://localhost:8080/api/movies/${d?.id}`)
+        axios.delete(`http://3.149.27.3:8080/api/movies/${d?.id}`)
             .then(resp => {
                 refetch();
             })

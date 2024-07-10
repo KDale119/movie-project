@@ -1,4 +1,3 @@
-import {Dispatch, SetStateAction, useEffect } from "react"
 import {movies } from "../types";
 import Navigation from "./Navigation";
 import { useRouter } from "next/router";
@@ -46,7 +45,7 @@ export default function DisplayMovies({dataForMovies, deleteMovie}:DataProps) {
                     <tr key={"tableWrapper" + d.id} className="bg-white divide-y divide-gray-200">
                         <td key={d.id} className="px-36 py-8 whitespace-nowrap text-xl">{d.id}</td>
                         <td key={d.movieLength} className="px-36 py-8 whitespace-nowrap text-xl">{d.movieLength} hours</td>
-                        <td key={d.movieTitle} className="px-36 py-15 whitespace-nowrap text-xl" onClick={() => passingData(d)}>{d.movieTitle}</td>
+                        <td key={d.movieTitle} className="px-36 py-15 whitespace-nowrap text-xl text-blue-700" onClick={() => passingData(d)}>{d.movieTitle}</td>
                         <td key={d.releaseDate} className="px-36 py-8 whitespace-nowrap text-xl">{d.releaseDate}</td>
                         <td className="px-10" key="deleteButton">
                             <button key="button"
