@@ -1,9 +1,7 @@
 
 'use client'
-import {Dispatch, SetStateAction, useState } from "react"
-import { actors, directors } from "../types";
+import {actors} from "../types";
 import Navigation from "./Navigation";
-
 import { useRouter } from "next/router";
 import Link from "next/link";
 

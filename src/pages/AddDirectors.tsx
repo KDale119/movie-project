@@ -44,7 +44,7 @@ export default function AddDirectors(){
             setSubmit(false)
             backToDirectors();
         }
-    }, [isPending, isSubmitting]);
+    }, [isPending, isSubmitting])
     
     const onSubmit = (formData: { id: number, firstName: string, lastName: string, dateOfBirth: string }) => {
         setSubmit(true)

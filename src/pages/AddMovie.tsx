@@ -11,7 +11,6 @@ import {AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, R
     useEffect,
     useState
 } from 'react';
-import Link from 'next/link';
 
 export default function AddMovie() {
     const [directorsState, setDirectors] = useState<directors[]>();
@@ -23,10 +22,10 @@ export default function AddMovie() {
     const {push} = useRouter();
     const schema = yup.object().shape({
         id: yup.number(),
-        movieLength: yup.number().required("must pick"),
-        movieTitle: yup.string().required("must pick"),
-        releaseDate: yup.string().required("must pick"),
-        trailerUrl: yup.string().required("must pick"),
+        movieLength: yup.number().required("Must enter movie length"),
+        movieTitle: yup.string().required("Must enter movie name"),
+        releaseDate: yup.string().required("Must enter movie release date"),
+        trailerUrl: yup.string().required("Must enter movie trailer link"),
         rating: yup.string(),
         genre: yup.string(),
         director: yup.string(),
@@ -136,7 +135,6 @@ export default function AddMovie() {
             .then(response => {
                 setActors(response.data)
             })
-
         axios.get('http://3.149.27.3:8080/api/genres')
             .then(response => {
                 setGenre(response.data)

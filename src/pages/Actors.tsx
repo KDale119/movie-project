@@ -3,15 +3,10 @@ import {useState} from "react";
 import axios from "axios";
 import {actors, directors} from "../types";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery} from "@tanstack/react-query";
 import DisplayActors from "@/components/DisplayActors";
 
-interface DataProps{
-    actorsData: actors[] | undefined
-
-}
-
-export default function Actors({actorsData}: DataProps) {
+export default function Actors() {
 
     const {refetch, data} = useQuery({
         queryKey:["actors"],
